@@ -1,13 +1,9 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:16'
-        }
-    }
+    agent any // Use the Jenkins server's environment
     stages {
         stage('Checkout') {
             steps {
-                // Check out the source code
+                // Check out the source code from the repository
                 checkout scm
             }
         }
@@ -29,12 +25,14 @@ pipeline {
                 sh 'npm test'
             }
         }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying the application...'
+                // Add deployment commands here
+            }
+        }
     }
     post {
-        always {
-            // Clean up workspace after the build
-            cleanWs()
-        }
         success {
             echo 'Pipeline executed successfully!'
         }
