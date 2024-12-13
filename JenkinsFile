@@ -1,30 +1,45 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:16'
+        }
+    }
     stages {
         stage('Checkout') {
             steps {
+                // Check out the source code
                 checkout scm
             }
         }
         stage('Install Dependencies') {
             steps {
+                // Install project dependencies
                 sh 'npm install'
             }
         }
         stage('Build') {
             steps {
+                // Build the project
                 sh 'npm run build'
             }
         }
         stage('Test') {
             steps {
+                // Run tests
                 sh 'npm test'
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploy stage (add specific deployment commands here)'
-            }
+    }
+    post {
+        always {
+            // Clean up workspace after the build
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Please check the logs.'
         }
     }
 }
