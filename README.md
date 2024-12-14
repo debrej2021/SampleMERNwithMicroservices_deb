@@ -25,3 +25,6 @@ npm start
 ```
 
 Note: This will run the frontend in the development server. To run in production, build the application by running the command `npm run build`
+
+aws codecommit create-repository --repository-name mern-deb-scaling --region us-west-2
+gives error as permission denied
