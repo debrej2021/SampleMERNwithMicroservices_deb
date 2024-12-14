@@ -1,0 +1,59 @@
+pipeline {
+    agent any
+    environment {
+        AWS_REGION = 'us-west-2' // Update if necessary
+        ECR_LOGIN = '975050024946.dkr.ecr.us-west-2.amazonaws.com' // Your ECR URL
+        GIT_REPO_URL = 'https://github.com/debrej2021/SampleMERNwithMicroservices_deb.git'
+        GIT_CREDENTIALS_ID = 'herovired' // Your Jenkins Git credential ID
+    }
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                // Clean up the workspace before starting the build
+                cleanWs() // Requires the "Workspace Cleanup Plugin"
+            }
+        }
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main',
+                    url: "${GIT_REPO_URL}",
+                    credentialsId: "${GIT_CREDENTIALS_ID}"
+            }
+        }
+        stage('Build Docker Images') {
+            steps {
+                sh '''
+                echo "Building Frontend Docker Image..."
+                cd frontend
+                docker build -t ${ECR_LOGIN}/frontend_deb_scaling:latest .
+
+                echo "Building Backend Docker Image..."
+                cd ../backend
+                docker build -t ${ECR_LOGIN}/backend_deb_scaling:latest .
+                '''
+            }
+        }
+        stage('Push Docker Images to ECR') {
+            steps {
+                sh '''
+                echo "Authenticating with Amazon ECR..."
+                aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_LOGIN}
+
+                echo "Pushing Frontend Image to ECR..."
+                docker push ${ECR_LOGIN}/frontend_deb_scaling:latest
+
+                echo "Pushing Backend Image to ECR..."
+                docker push ${ECR_LOGIN}/backend_deb_scaling:latest
+                '''
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Docker images built and pushed successfully to Amazon ECR!'
+        }
+        failure {
+            echo 'Build or push failed. Check logs for details.'
+        }
+    }
+}
