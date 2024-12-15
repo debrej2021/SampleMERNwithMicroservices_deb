@@ -1,5 +1,6 @@
 # Sample MERN with Microservices
 
+I forked the repo to have my own repo a copy of the repo given ( repo details mentioned in the text document )
 I created only 1 EC2 instance ( it has been deleted now but I have shared some screen shots Jenkins_setup_EC2.png , EC2_jenkins.png) to prove . Instance iD is i-022cb241646b9dc6b - Deb_scaling_deploying I had to increase space and type of EC2 to t3.xlarge as the docker image building was taking time or else . 
 
 
