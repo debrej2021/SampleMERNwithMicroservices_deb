@@ -3,3 +3,5 @@ I have created the architecture in Architecture.drawio file where I have defined
 - EC2 Instances for backend and frontend
 - Route 53 
 -Public and private subnets 
+
+I have detailed in the README.md file on the details of the implmentation
