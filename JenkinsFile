@@ -1,43 +1,59 @@
 pipeline {
-    agent any // Use the Jenkins server's environment
+    agent any
+    environment {
+        AWS_REGION = 'us-west-2' // Update if necessary
+        ECR_LOGIN = '975050024946.dkr.ecr.us-west-2.amazonaws.com' // Your ECR URL
+        GIT_REPO_URL = 'https://github.com/debrej2021/SampleMERNwithMicroservices_deb.git'
+        GIT_CREDENTIALS_ID = 'herovired' // Your Jenkins Git credential ID
+    }
     stages {
-        stage('Checkout') {
+        stage('Clean Workspace') {
             steps {
-                // Check out the source code from the repository
-                checkout scm
+                // Clean up the workspace before starting the build
+                cleanWs() // Requires the "Workspace Cleanup Plugin"
             }
         }
-        stage('Install Dependencies') {
+        stage('Checkout Code') {
             steps {
-                // Install project dependencies
-                sh 'npm install'
+                git branch: 'main',
+                    url: "${GIT_REPO_URL}",
+                    credentialsId: "${GIT_CREDENTIALS_ID}"
             }
         }
-        stage('Build') {
+        stage('Build Docker Images') {
             steps {
-                // Build the project
-                sh 'npm run build'
+                sh '''
+                echo "Building Frontend Docker Image..."
+                cd frontend
+                docker build -t ${ECR_LOGIN}/frontend_deb_scaling:latest .
+
+                echo "Building Backend Docker Image..."
+                cd ../backend
+                docker build -t ${ECR_LOGIN}/backend_deb_scaling:latest .
+                '''
             }
         }
-        stage('Test') {
+        stage('Push Docker Images to ECR') {
             steps {
-                // Run tests
-                sh 'npm test'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying the application...'
-                // Add deployment commands here
+                sh '''
+                echo "Authenticating with Amazon ECR..."
+                aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_LOGIN}
+
+                echo "Pushing Frontend Image to ECR..."
+                docker push ${ECR_LOGIN}/frontend_deb_scaling:latest
+
+                echo "Pushing Backend Image to ECR..."
+                docker push ${ECR_LOGIN}/backend_deb_scaling:latest
+                '''
             }
         }
     }
     post {
         success {
-            echo 'Pipeline executed successfully!'
+            echo 'Docker images built and pushed successfully to Amazon ECR!'
         }
         failure {
-            echo 'Pipeline failed. Please check the logs.'
+            echo 'Build or push failed. Check logs for details.'
         }
     }
 }
