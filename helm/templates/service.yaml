@@ -1,0 +1,26 @@
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.frontend.name }}-service
+spec:
+  type: {{ .Values.service.frontendType }}
+  selector:
+    app: {{ .Values.frontend.name }}
+  ports:
+    - port: 80
+      targetPort: {{ .Values.frontend.port }}
+
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.backend.name }}-service
+spec:
+  type: {{ .Values.service.backendType }}
+  selector:
+    app: {{ .Values.backend.name }}
+  ports:
+    - port: {{ .Values.backend.port }}
+      targetPort: {{ .Values.backend.port }}

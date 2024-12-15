@@ -1,0 +1,18 @@
+# Frontend Configuration
+frontend:
+  name: frontend
+  image: 975050024946.dkr.ecr.us-west-2.amazonaws.com/frontend_deb_scaling:latest
+  replicaCount: 2
+  port: 80
+
+# Backend Configuration
+backend:
+  name: backend
+  image: 975050024946.dkr.ecr.us-west-2.amazonaws.com/backend_deb_scaling:latest
+  replicaCount: 2
+  port: 5000
+
+# Service Configuration
+service:
+  frontendType: LoadBalancer
+  backendType: ClusterIP

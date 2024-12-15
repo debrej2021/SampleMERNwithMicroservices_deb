@@ -1,0 +1,5 @@
+I have created the architecture in Architecture.drawio file where I have defined the contents -
+
+- EC2 Instances for backend and frontend
+- Route 53 
+-Public and private subnets 
