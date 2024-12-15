@@ -4,7 +4,7 @@ I created only 1 EC2 instance ( it has been deleted now but I have shared some s
 
 
 
-I was able to install Jenkins through docker in the Ubuntu EC2 , For some reason I did not have access to code Commit to create repo , I created 2 Private ECR repos ( ECR_Repos_CReated.png)
+I was able to install Jenkins through docker in the Ubuntu EC2 , For some reason I did not have access to code Commit to create repo hence I had to do it via git i.e download the git repo , build image and push image into ECR, I created 2 Private ECR repos ( ECR_Repos_CReated.png)
 
 I also installed AWS CLI and configured it in Jenkins and ontainer 
 
