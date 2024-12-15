@@ -1,8 +1,18 @@
 # Sample MERN with Microservices
 
-I created only 1 EC2 instance ( it has been deleted now but I have shared some screen shots Jenkins_setup_EC2.png , EC2_jenkins.png) to prove . 
+I created only 1 EC2 instance ( it has been deleted now but I have shared some screen shots Jenkins_setup_EC2.png , EC2_jenkins.png) to prove . Instance iD is i-022cb241646b9dc6b - Deb_scaling_deploying
+
+
 
 I was able to install Jenkins through docker in the Ubuntu EC2 , For some reason I did not have access to code Commit to create repo , I created 2 Private ECR repos ( ECR_Repos_CReated.png)
+
+I also installed AWS CLI and configured it in Jenkins and ontainer 
+
+I was also able to set up a webhook in github which would trigger a build when ever there is a commit 
+
+Jenkins URL - http://EC2IP:8080
+
+I also installed docker deamon inside the jenkins container and allow all sockets access ( this was because individual user acccess was creating problem)
 
 I was able to build the code , build the docker image and push it into ECR ( I have also INcluded a successful_build.txt file to show the build )
 
